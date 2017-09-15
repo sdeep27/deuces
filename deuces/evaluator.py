@@ -71,7 +71,25 @@ class Evaluator(object):
                 minimum = score
 
         return minimum
+    def evaluate_omaha(self, cards, board):
+        all_cards = cards + board
+        return self._seven_omaha(cards, board)
 
+    def _seven_omaha(self, cards, board):
+        minimum = LookupTable.MAX_HIGH_CARD
+
+        cardcombos = list(itertools.combinations(cards, 2))
+        boardcombos = list(itertools.combinations(board, 3))
+        all5cardcombobs = []
+        for twocards in cardcombos:
+            for board in boardcombos:
+                all5cardcombobs.append(twocards + board)
+        for combo in all5cardcombobs:
+            score = self._five(combo)
+            if score < minimum:
+                minimum = score
+        return minimum
+            
     def _seven(self, cards):
         """
         Performs five_card_eval() on all (7 choose 5) = 21 subsets
